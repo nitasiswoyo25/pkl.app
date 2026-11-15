@@ -117,6 +117,11 @@ td{padding:10px;border-top:1px solid var(--line)}
 .kv span{color:var(--mut)}.kv b{text-align:right}
 .dt-img{width:100%;border-radius:14px;margin:6px 0;background:#e2e8f0;min-height:120px;object-fit:cover}
 .map{width:100%;height:220px;border:0;border-radius:14px;margin:6px 0}
+.tmap{position:relative;width:100%;height:220px;overflow:hidden;border-radius:14px;margin:6px 0;background:#e5e3df}
+.tmap .grid{position:absolute;left:50%;top:50%;width:768px;height:768px;display:grid;grid-template-columns:repeat(3,256px);grid-template-rows:repeat(3,256px)}
+.tmap .grid img{width:256px;height:256px;display:block}
+.tmap .pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);font-size:34px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.tmap .cr{position:absolute;right:4px;bottom:2px;font-size:10px;background:rgba(255,255,255,.8);padding:1px 4px;border-radius:4px}
 .dt-h{font-weight:700;font-size:14px;margin:10px 0 2px}
 .link{color:var(--blue);font-size:13px;font-weight:600;text-decoration:none}
 
@@ -509,9 +514,23 @@ function renderRiwayat() {
 $('rTgl').addEventListener('input', renderRiwayat);
 $('rCari').addEventListener('input', renderRiwayat);
 
+/* peta statis dari tile OpenStreetMap (tanpa iframe, tanpa API key) */
+function petaHtml(lat, lng) {
+  const z = 17, n = Math.pow(2, z), rad = lat * Math.PI / 180;
+  const xf = (lng + 180) / 360 * n;
+  const yf = (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * n;
+  const x = Math.floor(xf), y = Math.floor(yf);
+  const px = (xf - x) * 256, py = (yf - y) * 256;
+  let tiles = '';
+  for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++)
+    tiles += `<img alt="" src="https://tile.openstreetmap.org/${z}/${x + dx}/${y + dy}.png">`;
+  return `<div class="tmap"><div class="grid" style="margin-left:-${256 + px}px;margin-top:-${256 + py}px">${tiles}</div>
+    <div class="pin">📍</div><div class="cr">© OpenStreetMap</div></div>`;
+}
+
 function detail(id) {
   const a = RIW.find(x => x.id === id); if (!a) return;
-  const lat = Number(a.lat), lng = Number(a.lng), adaLok = isFinite(lat) && isFinite(lng);
+  const lat = Number(String(a.lat).replace(',', '.')), lng = Number(String(a.lng).replace(',', '.')), adaLok = isFinite(lat) && isFinite(lng);
   openModal(`<div class="m-t" style="text-align:left;font-size:18px">Detail Absensi</div>
     <div class="kv" style="margin-top:10px">
       <div><span>NIS</span><b>${esc(a.nis)}</b></div>
@@ -525,7 +544,7 @@ function detail(id) {
     <div class="dt-h">📷 Foto</div>
     <div id="dtFoto"><div class="empty">Memuat foto…</div></div>
     <div class="dt-h">📍 Lokasi</div>
-    ${adaLok ? `<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.003},${lat-0.002},${lng+0.003},${lat+0.002}&layer=mapnik&marker=${lat},${lng}"></iframe>
+    ${adaLok ? `${petaHtml(lat, lng)}
     <a class="link" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${lat},${lng}">Buka di Google Maps ↗</a>` : '<div class="empty">Lokasi tidak tersedia</div>'}
     <button class="btn btn-g btn-block" style="margin-top:14px" onclick="closeModal()">Tutup</button>`);
   muatFoto(a);
