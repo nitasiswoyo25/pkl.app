@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#e6498a">
 <title>Absensi Prakering</title>
 <style>
-:root{--p:#0f766e;--p2:#14b8a6;--bg:#f1f5f9;--card:#fff;--tx:#0f172a;--mut:#64748b;--line:#e2e8f0;
+:root{--p:#e6498a;--p2:#ff7eb3;--pt:#be2f6c;--bg:#fff5f9;--card:#fff;--tx:#0f172a;--mut:#64748b;--line:#e2e8f0;
 --ok:#16a34a;--blue:#2563eb;--warn:#d97706;--err:#dc2626}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
@@ -31,7 +31,7 @@ h2{font-size:19px;margin-bottom:4px}
 .sub{color:var(--mut);font-size:14px;margin-bottom:14px}
 
 /* login */
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,#0f766e,#14b8a6 55%,#99f6e4)}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,#ff5c9e,#ff8fbd 55%,#ffc2d9)}
 .login-card{background:#fff;width:100%;max-width:400px;border-radius:22px;padding:28px 24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .logo{width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,var(--p),var(--p2));display:grid;place-items:center;font-size:34px;margin:0 auto 12px}
 .login-card h1{text-align:center;font-size:22px}
@@ -39,7 +39,7 @@ h2{font-size:19px;margin-bottom:4px}
 
 label{display:block;font-size:13px;font-weight:600;color:#334155;margin:12px 0 6px}
 .inp{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;outline:none;transition:.15s}
-.inp:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(20,184,166,.18)}
+.inp:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(255,92,158,.22)}
 .inp[readonly]{background:#f1f5f9;color:#475569}
 .pw{position:relative}
 .pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;font-size:18px;padding:6px}
@@ -48,7 +48,7 @@ label{display:block;font-size:13px;font-weight:600;color:#334155;margin:12px 0 6
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:12px;font-weight:700;font-size:15px;transition:.15s}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-p{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 4px 12px rgba(15,118,110,.3)}
+.btn-p{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 4px 12px rgba(230,73,138,.35)}
 .btn-g{background:#e2e8f0;color:#334155}
 .btn-block{width:100%}
 .btn-s{padding:8px 12px;font-size:13px;border-radius:10px}
@@ -60,15 +60,15 @@ label{display:block;font-size:13px;font-weight:600;color:#334155;margin:12px 0 6
 .menu-btn .ic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;flex:none}
 .menu-btn b{display:block;font-size:17px}
 .menu-btn span{color:var(--mut);font-size:13px}
-.ic1{background:#ccfbf1}.ic2{background:#dbeafe}.ic3{background:#fef3c7}.ic4{background:#ede9fe}
+.ic1{background:#ffe0ee}.ic2{background:#dbeafe}.ic3{background:#fef3c7}.ic4{background:#ede9fe}
 
-.back{background:none;color:var(--p);font-weight:700;padding:4px 0 12px;font-size:15px}
+.back{background:none;color:var(--pt);font-weight:700;padding:4px 0 12px;font-size:15px}
 
 /* status picker */
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .opt{padding:12px 6px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-weight:700;font-size:14px;color:#334155;text-align:center}
 .opt small{display:block;font-weight:500;font-size:11px;color:var(--mut);margin-top:2px}
-.opt.sel{border-color:var(--p);background:#f0fdfa;color:var(--p);box-shadow:0 0 0 3px rgba(20,184,166,.18)}
+.opt.sel{border-color:var(--p);background:#fff0f6;color:var(--pt);box-shadow:0 0 0 3px rgba(255,92,158,.22)}
 .opt.done{opacity:.45;cursor:not-allowed;background:#f1f5f9}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
@@ -95,7 +95,7 @@ label{display:block;font-size:13px;font-weight:600;color:#334155;margin:12px 0 6
 .chip{background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .chip b{display:block;font-size:22px}.chip small{color:var(--mut);font-size:12px}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
-th{background:#f0fdfa;color:var(--p);text-align:left;padding:10px;font-size:12.5px}
+th{background:#fff0f6;color:var(--pt);text-align:left;padding:10px;font-size:12.5px}
 td{padding:10px;border-top:1px solid var(--line)}
 .sec-t{font-weight:700;margin:16px 0 8px;font-size:15px}
 .tm{font-size:11.5px;color:var(--mut);display:block;margin-top:2px}
@@ -128,7 +128,7 @@ td{padding:10px;border-top:1px solid var(--line)}
 /* loading */
 .load{position:fixed;inset:0;background:rgba(255,255,255,.75);display:none;place-items:center;z-index:80}
 .load.on{display:grid}
-.spin{width:46px;height:46px;border:5px solid #99f6e4;border-top-color:var(--p);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 10px}
+.spin{width:46px;height:46px;border:5px solid #ffc2d9;border-top-color:var(--p);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 10px}
 @keyframes sp{to{transform:rotate(360deg)}}
 .load p{font-size:14px;color:#334155;font-weight:600;text-align:center}
 </style>
@@ -276,7 +276,7 @@ td{padding:10px;border-top:1px solid var(--line)}
 /* ============================================================
    KONFIGURASI  -->  tempel URL Web App dari Apps Script di sini
    ============================================================ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbyEgsfaaVaka-UWkfJfeyXRXaZxsl3wpmq2pGhM9ZtlfkBjyHKDFvjwp1t7BDFmUDli/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyEgsfaaVaka-UWkfJfeyXRXaZxsl3wpmq2pGhM9ZtlfkBjyHKDFvjwp1t7BDFmUDli/execP';
 
 /* ---------- util ---------- */
 const $ = id => document.getElementById(id);
