@@ -514,6 +514,19 @@ function renderRiwayat() {
 $('rTgl').addEventListener('input', renderRiwayat);
 $('rCari').addEventListener('input', renderRiwayat);
 
+/* ambil koordinat dari kolom Maps (selalu berformat titik), cadangan dari kolom lat/lng */
+function parseKoordinat(a) {
+  let lat = NaN, lng = NaN;
+  const m = String(a.maps || '').match(/q=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/);
+  if (m) { lat = Number(m[1]); lng = Number(m[2]); }
+  if (!isFinite(lat) || !isFinite(lng)) {
+    const f = v => Number(String(v).trim().replace(',', '.'));
+    lat = f(a.lat); lng = f(a.lng);
+  }
+  const ok = isFinite(lat) && isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 && !(lat === 0 && lng === 0);
+  return { lat, lng, ok };
+}
+
 /* peta statis dari tile OpenStreetMap (tanpa iframe, tanpa API key) */
 function petaHtml(lat, lng) {
   const z = 17, n = Math.pow(2, z), rad = lat * Math.PI / 180;
@@ -530,7 +543,8 @@ function petaHtml(lat, lng) {
 
 function detail(id) {
   const a = RIW.find(x => x.id === id); if (!a) return;
-  const lat = Number(String(a.lat).replace(',', '.')), lng = Number(String(a.lng).replace(',', '.')), adaLok = isFinite(lat) && isFinite(lng);
+  const { lat, lng, ok: adaLok } = parseKoordinat(a);
+  const mapsUrl = adaLok ? `https://www.google.com/maps?q=${lat},${lng}` : (String(a.maps).indexOf('https://www.google.com/maps') === 0 ? a.maps : '');
   openModal(`<div class="m-t" style="text-align:left;font-size:18px">Detail Absensi</div>
     <div class="kv" style="margin-top:10px">
       <div><span>NIS</span><b>${esc(a.nis)}</b></div>
@@ -539,13 +553,14 @@ function detail(id) {
       <div><span>Hari, Tanggal</span><b>${esc(a.hari)}, ${esc(fmtTgl(a.tanggal))}</b></div>
       <div><span>Waktu</span><b>${esc(a.waktu)} WIB</b></div>
       <div><span>Status</span><b><span class="badge b-${esc(a.status)}">${esc(a.status)}</span></b></div>
-      <div><span>Koordinat</span><b>${esc(a.lat)}, ${esc(a.lng)}</b></div>
+      <div><span>Koordinat</span><b>${mapsUrl ? `<a class="link" target="_blank" rel="noopener" href="${esc(mapsUrl)}">${adaLok ? esc(lat + ', ' + lng) : esc(a.lat + ', ' + a.lng)} ↗</a>` : esc(a.lat + ', ' + a.lng)}</b></div>
     </div>
     <div class="dt-h">📷 Foto</div>
     <div id="dtFoto"><div class="empty">Memuat foto…</div></div>
     <div class="dt-h">📍 Lokasi</div>
     ${adaLok ? `${petaHtml(lat, lng)}
-    <a class="link" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${lat},${lng}">Buka di Google Maps ↗</a>` : '<div class="empty">Lokasi tidak tersedia</div>'}
+    <a class="link" target="_blank" rel="noopener" href="${esc(mapsUrl)}">Buka di Google Maps ↗</a>`
+      : `<div class="empty">Peta tidak dapat ditampilkan<br><small>Data tersimpan: ${esc(a.lat)} | ${esc(a.lng)} | ${esc(a.maps)}</small></div>${mapsUrl ? `<a class="link" target="_blank" rel="noopener" href="${esc(mapsUrl)}">Buka di Google Maps ↗</a>` : ''}`}
     <button class="btn btn-g btn-block" style="margin-top:14px" onclick="closeModal()">Tutup</button>`);
   muatFoto(a);
 }
