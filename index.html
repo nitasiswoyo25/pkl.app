@@ -134,7 +134,7 @@ td{padding:10px;border-top:1px solid var(--line)}
 <div id="viewLogin" class="login-wrap">
   <form class="login-card" id="formLogin" autocomplete="on">
     <div class="logo">🏭</div>
-    <h1>Absensi PKL</h1>
+    <h1>Absensi Prakering</h1>
     <p>Masuk dengan NIS dan password dari sekolah</p>
     <label for="lNis">NIS / ID Guru</label>
     <input class="inp" id="lNis" inputmode="text" autocomplete="username" placeholder="Masukkan NIS" required>
@@ -306,7 +306,6 @@ function fmtTgl(t) {
   if (p.length !== 3) return t;
   return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 }
-const fotoAman = u => (String(u).indexOf('https://drive.google.com/') === 0 ? u : '');
 
 /* ---------- modal ---------- */
 function openModal(html) { $('modal').innerHTML = html; $('ov').classList.add('on'); }
@@ -512,7 +511,7 @@ $('rCari').addEventListener('input', renderRiwayat);
 
 function detail(id) {
   const a = RIW.find(x => x.id === id); if (!a) return;
-  const foto = fotoAman(a.foto), lat = Number(a.lat), lng = Number(a.lng), adaLok = isFinite(lat) && isFinite(lng);
+  const lat = Number(a.lat), lng = Number(a.lng), adaLok = isFinite(lat) && isFinite(lng);
   openModal(`<div class="m-t" style="text-align:left;font-size:18px">Detail Absensi</div>
     <div class="kv" style="margin-top:10px">
       <div><span>NIS</span><b>${esc(a.nis)}</b></div>
@@ -524,11 +523,23 @@ function detail(id) {
       <div><span>Koordinat</span><b>${esc(a.lat)}, ${esc(a.lng)}</b></div>
     </div>
     <div class="dt-h">📷 Foto</div>
-    ${foto ? `<img class="dt-img" src="${esc(foto)}" alt="Foto absensi" onerror="this.outerHTML='<div class=empty>Foto tidak dapat dimuat</div>'">` : '<div class="empty">Tidak ada foto</div>'}
+    <div id="dtFoto"><div class="empty">Memuat foto…</div></div>
     <div class="dt-h">📍 Lokasi</div>
     ${adaLok ? `<iframe class="map" loading="lazy" src="https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed"></iframe>
     <a class="link" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${lat},${lng}">Buka di Google Maps ↗</a>` : '<div class="empty">Lokasi tidak tersedia</div>'}
     <button class="btn btn-g btn-block" style="margin-top:14px" onclick="closeModal()">Tutup</button>`);
+  muatFoto(a);
+}
+
+const FOTO_CACHE = {};
+async function muatFoto(a) {
+  const box = () => $('dtFoto');
+  try {
+    if (!FOTO_CACHE[a.id]) FOTO_CACHE[a.id] = (await api('foto', { id: a.id }, false)).data;
+    if (box()) box().innerHTML = `<img class="dt-img" src="${FOTO_CACHE[a.id]}" alt="Foto absensi">`;
+  } catch (e) {
+    if (box()) box().innerHTML = '<div class="empty">Foto tidak dapat dimuat</div>';
+  }
 }
 
 /* ============================================================
