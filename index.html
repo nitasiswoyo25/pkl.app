@@ -525,7 +525,7 @@ function detail(id) {
     <div class="dt-h">📷 Foto</div>
     <div id="dtFoto"><div class="empty">Memuat foto…</div></div>
     <div class="dt-h">📍 Lokasi</div>
-    ${adaLok ? `<iframe class="map" loading="lazy" src="https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed"></iframe>
+    ${adaLok ? `<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.003},${lat-0.002},${lng+0.003},${lat+0.002}&layer=mapnik&marker=${lat},${lng}"></iframe>
     <a class="link" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${lat},${lng}">Buka di Google Maps ↗</a>` : '<div class="empty">Lokasi tidak tersedia</div>'}
     <button class="btn btn-g btn-block" style="margin-top:14px" onclick="closeModal()">Tutup</button>`);
   muatFoto(a);
@@ -538,7 +538,8 @@ async function muatFoto(a) {
     if (!FOTO_CACHE[a.id]) FOTO_CACHE[a.id] = (await api('foto', { id: a.id }, false)).data;
     if (box()) box().innerHTML = `<img class="dt-img" src="${FOTO_CACHE[a.id]}" alt="Foto absensi">`;
   } catch (e) {
-    if (box()) box().innerHTML = '<div class="empty">Foto tidak dapat dimuat</div>';
+    if (box()) box().innerHTML = `<div class="empty">Foto tidak dapat dimuat<br><small>${esc(e.message)}</small><br>
+      <button class="btn btn-g btn-s" style="margin-top:10px" onclick="muatFoto(RIW.find(x=>x.id==='${esc(a.id)}'))">Coba lagi</button></div>`;
   }
 }
 
